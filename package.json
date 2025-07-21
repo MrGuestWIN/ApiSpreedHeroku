@@ -1,0 +1,17 @@
+{
+  "name": "kawus-email-api",
+  "version": "2.0.0",
+  "description": "Email sending API powered by Kawus",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.4.0"
+  }
+}

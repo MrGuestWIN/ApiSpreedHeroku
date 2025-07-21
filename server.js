@@ -1,8 +1,40 @@
 import express from 'express';
 import axios from 'axios';
 import fs from 'fs';
-import { generateRandomString } from './randomUtils.js';
-import config from './config.json' assert { type: 'json' };
+
+// Built-in random string generator (fallback if randomUtils.js not available)
+function generateRandomString(length, type) {
+  let chars = '';
+  switch (type) {
+    case 'alphanumeric':
+      chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      break;
+    case 'uppercase':
+      chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      break;
+    case 'lowercase':
+      chars = 'abcdefghijklmnopqrstuvwxyz';
+      break;
+    case 'numeric':
+      chars = '0123456789';
+      break;
+    default:
+      chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  }
+  
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+// Default config (fallback if config.json not available)
+const config = {
+  subjectTemplate: "Hello {email} - ID: {randomID:7}",
+  fromName: "TWF5aWxlciA8bm9yZXBseUBnbWFpbC5jb20+", // Base64 encoded
+  deleteSentEmails: false
+};
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Google Drive file ID untuk smtp.txt (ubah sesuai file Anda)
-const GOOGLE_DRIVE_FILE_ID = process.env.SMTP_FILE_ID || '1y-weGue32QQVXTqPfAsRPU1nawGNX7ex';
+const GOOGLE_DRIVE_FILE_ID = process.env.SMTP_FILE_ID || 'YOUR_GOOGLE_DRIVE_FILE_ID';
 
 // Cache untuk WebApp URLs
 let cachedWebAppUrls = [];
